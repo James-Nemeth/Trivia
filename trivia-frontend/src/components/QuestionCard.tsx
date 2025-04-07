@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { decodeHTML } from "../utils/utilites";
+import { decodeHTML } from "../utils/utilities";
 
 interface QuestionCardProps {
   question: string;
