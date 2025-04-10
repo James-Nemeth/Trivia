@@ -1,9 +1,10 @@
-import React from "react";
 import DifficultySelector from "../components/DifficultySelector";
 import QuestionCard from "../components/QuestionCard";
 import GameOver from "../components/GameOver";
 import { shuffleAnswers } from "../utils/utilities";
 import useGameLogic from "../hooks/useGameLogic";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Game: React.FC = () => {
   const {
@@ -14,10 +15,13 @@ const Game: React.FC = () => {
     score,
     gameOver,
     handleAnswer,
-    handleTimeout,
     handlePlayAgain,
     setDifficulty,
   } = useGameLogic();
+
+  const lastQuestion = useSelector(
+    (state: RootState) => state.game.lastQuestion
+  );
 
   return (
     <div className="container mx-auto p-4">
@@ -37,10 +41,15 @@ const Game: React.FC = () => {
             questions[currentQuestionIndex].correct_answer,
           ])}
           onAnswer={handleAnswer}
-          onTimeout={handleTimeout}
         />
       )}
-      {gameOver && <GameOver score={score} onPlayAgain={handlePlayAgain} />}
+      {gameOver && (
+        <GameOver
+          score={score}
+          onPlayAgain={handlePlayAgain}
+          lastQuestion={lastQuestion}
+        />
+      )}
     </div>
   );
 };

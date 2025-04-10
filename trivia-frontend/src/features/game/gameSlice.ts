@@ -6,6 +6,10 @@ interface GameState {
   currentQuestionIndex: number;
   score: number;
   gameOver: boolean;
+  lastQuestion?: {
+    question: string;
+    correctAnswer: string;
+  };
 }
 
 const initialState: GameState = {
@@ -14,6 +18,7 @@ const initialState: GameState = {
   currentQuestionIndex: 0,
   score: 0,
   gameOver: false,
+  lastQuestion: undefined,
 };
 
 const gameSlice = createSlice({
@@ -35,6 +40,12 @@ const gameSlice = createSlice({
     setGameOver(state, action: PayloadAction<boolean>) {
       state.gameOver = action.payload;
     },
+    setLastQuestion(
+      state,
+      action: PayloadAction<{ question: string; correctAnswer: string }>
+    ) {
+      state.lastQuestion = action.payload;
+    },
     resetGame(state) {
       state.difficulty = null;
       state.questions = [];
@@ -51,6 +62,7 @@ export const {
   setCurrentQuestionIndex,
   setScore,
   setGameOver,
+  setLastQuestion,
   resetGame,
 } = gameSlice.actions;
 

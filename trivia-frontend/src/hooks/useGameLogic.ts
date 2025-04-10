@@ -9,6 +9,7 @@ import {
   setScore,
   setGameOver,
   resetGame,
+  setLastQuestion,
 } from "../features/game/gameSlice";
 
 const useGameLogic = () => {
@@ -31,7 +32,10 @@ const useGameLogic = () => {
   }, [difficulty, dispatch]);
 
   const handleAnswer = (answer: string) => {
-    if (questions[currentQuestionIndex].correct_answer === answer) {
+    const currentQ = questions[currentQuestionIndex];
+    const isCorrect = currentQ.correct_answer === answer;
+
+    if (isCorrect) {
       dispatch(setScore(score + 1));
       const nextQuestionIndex = currentQuestionIndex + 1;
       if (nextQuestionIndex < questions.length) {
@@ -40,6 +44,12 @@ const useGameLogic = () => {
         dispatch(setGameOver(true));
       }
     } else {
+      dispatch(
+        setLastQuestion({
+          question: currentQ.question,
+          correctAnswer: currentQ.correct_answer,
+        })
+      );
       dispatch(setGameOver(true));
     }
   };

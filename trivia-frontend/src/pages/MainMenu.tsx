@@ -12,7 +12,8 @@ const MainMenu: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-purple-600 to-indigo-800 text-white">
+    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-purple-600 via-blue-700 to-indigo-800 text-white relative overflow-hidden">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-purple-500/20 via-transparent to-transparent animate-pulse"></div>
       <h1 className="text-3xl font-extrabold mb-1 drop-shadow-lg animate-fade-in">
         Welcome To
       </h1>

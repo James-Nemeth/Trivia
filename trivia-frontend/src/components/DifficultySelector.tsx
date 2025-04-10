@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 interface DifficultySelectorProps {
   onSelectDifficulty: (difficulty: string) => void;
 }
@@ -5,6 +7,12 @@ interface DifficultySelectorProps {
 const DifficultySelector: React.FC<DifficultySelectorProps> = ({
   onSelectDifficulty,
 }) => {
+  const navigate = useNavigate();
+
+  const handleBackToMenu = () => {
+    navigate("/");
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
       <div className="flex flex-col items-center text-center p-6 md:p-10 bg-white rounded-2xl shadow-xl max-w-lg w-full">
@@ -31,6 +39,13 @@ const DifficultySelector: React.FC<DifficultySelectorProps> = ({
             Hard
           </button>
         </div>
+        <button
+          className="mt-10 bg-purple-500 text-white px-10 py-4 mb-5 text-2xl font-semibold rounded-full shadow-lg hover:bg-purple-800 transition-transform transform hover:scale-105 cursor-pointer"
+          onClick={handleBackToMenu}
+        >
+          {" "}
+          Back to Menu
+        </button>
       </div>
     </div>
   );
