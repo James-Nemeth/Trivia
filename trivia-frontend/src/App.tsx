@@ -7,7 +7,7 @@ import Scores from "./pages/Scores";
 
 const App: React.FC = () => {
   return (
-    <div className="min-h-screen bg-purple-200">
+    <div className="min-h-screen bg-purple-600">
       <Router>
         <Routes>
           <Route path="/" element={<MainMenu />} />

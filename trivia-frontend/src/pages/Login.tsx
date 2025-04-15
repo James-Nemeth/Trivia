@@ -77,16 +77,23 @@ const Login: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="bg-purple-600 text-white px-6 py-3 rounded-lg w-full text-lg cursor-pointer hover:bg-purple-700 transition-all"
+          className="bg-purple-500 font-bold text-white px-6 py-3 rounded-lg w-full text-xl cursor-pointer hover:bg-purple-800 transition-all"
         >
           Login
         </button>
         <button
           type="button"
-          className="bg-gray-400 text-white px-6 py-3 rounded-lg w-full mt-6 text-lg cursor-pointer hover:bg-gray-500 transition-all"
+          className="bg-purple-500 font-bold text-white px-6 py-3 rounded-lg w-full mt-6 text-xl cursor-pointer hover:bg-purple-800 transition-all"
           onClick={() => navigate("/signup")}
         >
           Sign Up
+        </button>
+        <button
+          type="button"
+          className="bg-purple-500 font-bold text-white px-6 py-3 rounded-lg w-full mt-6 text-xl cursor-pointer hover:bg-purple-800 transition-all"
+          onClick={() => navigate("/mainmenu")}
+        >
+          Main Menu
         </button>
       </form>
     </div>

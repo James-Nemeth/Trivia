@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { TriviaService } from "../services/TriviaService";
+import { paginate } from "../utils/utilities";
 
 interface Score {
   id: number;
@@ -12,6 +13,8 @@ const Scores: React.FC = () => {
   const [scores, setScores] = useState<Score[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,34 +38,102 @@ const Scores: React.FC = () => {
     fetchScores();
   }, []);
 
+  const totalPages = Math.ceil(scores.length / itemsPerPage);
+  const currentScores = paginate(scores, currentPage, itemsPerPage);
+
+  const handleNext = () => {
+    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl text-purple-800 font-bold text-center mb-4">
-        Your Scores
-      </h1>
-      <div className="bg-white shadow rounded-lg p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-10">
+      <div className="w-full max-w-2xl bg-white shadow-xl rounded-2xl p-8">
+        <h1 className="text-4xl text-purple-800 font-bold text-center mb-10">
+          Your Scores
+        </h1>
         {scores.length === 0 ? (
-          <p>No scores available.</p>
+          <p className="text-gray-600 text-center">No scores available.</p>
         ) : (
-          <ul>
-            {scores.map((score) => (
-              <li key={score.id} className="mb-2">
-                <p>Score: {score.score}</p>
-                <p>Date: {new Date(score.timestamp).toLocaleString()}</p>
-              </li>
-            ))}
-          </ul>
+          <>
+            <ul className="space-y-4">
+              {currentScores.map((score) => (
+                <li
+                  key={score.id}
+                  className="bg-gray-100 rounded-xl p-4 flex justify-between items-center shadow-sm"
+                >
+                  <div>
+                    <p className="text-xl font-bold text-purple-700">
+                      Score: {score.score}
+                    </p>
+                    <p className="text-md font bold text-black">
+                      Date: {new Date(score.timestamp).toLocaleString()}
+                    </p>
+                  </div>
+                  <div
+                    className={`px-3 py-1 rounded-full text-white text-sm font-bold ${
+                      score.score >= 10
+                        ? "bg-green-500"
+                        : score.score >= 5
+                        ? "bg-yellow-400"
+                        : "bg-red-400"
+                    }`}
+                  >
+                    {score.score >= 10
+                      ? " Great!"
+                      : score.score >= 5
+                      ? " Good"
+                      : " Keep Going"}
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex justify-center gap-4 mt-8">
+              <button
+                onClick={handlePrev}
+                disabled={currentPage === 1}
+                className={`px-4 py-2 text-lg font-semibold rounded-lg ${
+                  currentPage === 1
+                    ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-purple-500 text-white hover:bg-purple-700 cursor-pointer"
+                }`}
+              >
+                Prev
+              </button>
+              <span className="text-lg font-medium text-purple-700 mt-2">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={handleNext}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 text-lg font-semibold rounded-lg ${
+                  currentPage === totalPages
+                    ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-purple-500 text-white hover:bg-purple-700 cursor-pointer"
+                }`}
+              >
+                Next
+              </button>
+            </div>
+          </>
         )}
+
+        <div className="flex justify-center mt-10">
+          <button
+            className="bg-purple-500 text-white px-10 py-4 text-2xl font-semibold rounded-full shadow-lg hover:bg-purple-800 transition-transform transform hover:scale-105 cursor-pointer"
+            onClick={() => navigate("/game")}
+          >
+            Back to Game
+          </button>
+        </div>
       </div>
-      <button
-        className="bg-gray-400 text-white px-4 py-2 rounded-lg mt-4"
-        onClick={() => navigate("/game")}
-      >
-        Back to Game
-      </button>
     </div>
   );
 };

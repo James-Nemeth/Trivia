@@ -10,6 +10,7 @@ interface GameState {
     question: string;
     correctAnswer: string;
   };
+  timer: number; // Add a timer property
 }
 
 const initialState: GameState = {
@@ -19,6 +20,7 @@ const initialState: GameState = {
   score: 0,
   gameOver: false,
   lastQuestion: undefined,
+  timer: 20, // Initialize timer to 20 seconds
 };
 
 const gameSlice = createSlice({
@@ -52,6 +54,10 @@ const gameSlice = createSlice({
       state.currentQuestionIndex = 0;
       state.score = 0;
       state.gameOver = false;
+      state.timer = 20; // Reset timer
+    },
+    setTimer(state, action: PayloadAction<number>) {
+      state.timer = action.payload;
     },
   },
 });
@@ -64,6 +70,7 @@ export const {
   setGameOver,
   setLastQuestion,
   resetGame,
+  setTimer,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

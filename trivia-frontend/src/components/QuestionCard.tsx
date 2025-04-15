@@ -4,12 +4,14 @@ interface QuestionCardProps {
   question: string;
   answers: string[];
   onAnswer: (answer: string) => void;
+  timer: number;
 }
 
 const QuestionCard: React.FC<QuestionCardProps> = ({
   question,
   answers,
   onAnswer,
+  timer,
 }) => {
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
@@ -17,6 +19,12 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
         <h2 className="text-4xl md:text-3xl text-center font-bold text-purple-800 mb-12">
           {decodeHTML(question)}
         </h2>
+
+        <div className="text-center mb-6">
+          <p className="text-red-600 text-lg font-bold">
+            Time Remaining: {timer} seconds
+          </p>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
           {answers.map((answer, index) => (

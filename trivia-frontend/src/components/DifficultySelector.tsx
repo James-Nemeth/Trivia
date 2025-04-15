@@ -14,7 +14,7 @@ const DifficultySelector: React.FC<DifficultySelectorProps> = ({
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-4">
+    <div className="flex items-center justify-center h-screen px-4">
       <div className="flex flex-col items-center text-center p-6 md:p-10 bg-white rounded-2xl shadow-xl max-w-lg w-full">
         <h2 className="text-3xl md:text-4xl font-bold text-purple-800 mb-10">
           Select Your Challenge
@@ -46,11 +46,11 @@ const DifficultySelector: React.FC<DifficultySelectorProps> = ({
           See Scores
         </button>
         <button
-          className="mt-2 bg-purple-500 text-white px-10 py-4 mb- text-2xl font-semibold rounded-full shadow-lg hover:bg-purple-800 transition-transform transform hover:scale-105 cursor-pointer"
+          className="mt-2 bg-purple-500 text-white px-10 py-4 text-2xl font-semibold rounded-full shadow-lg hover:bg-purple-800 transition-transform transform hover:scale-105 cursor-pointer"
           onClick={handleBackToMenu}
         >
           {" "}
-          Back to Menu
+          Main Menu
         </button>
       </div>
     </div>
