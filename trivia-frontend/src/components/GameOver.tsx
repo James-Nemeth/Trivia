@@ -1,3 +1,7 @@
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { TriviaService } from "../services/TriviaService";
+import { RootState } from "../redux/store";
 import { decodeHTML } from "../utils/utilities";
 
 interface GameOverProps {
@@ -14,6 +18,23 @@ const GameOver: React.FC<GameOverProps> = ({
   onPlayAgain,
   lastQuestion,
 }) => {
+  const username = useSelector((state: RootState) => state.user.username);
+
+  useEffect(() => {
+    const saveScore = async () => {
+      if (username) {
+        try {
+          await TriviaService.saveScore(username, score);
+          console.log("Score saved successfully");
+        } catch (error) {
+          console.error("Error saving score:", error);
+        }
+      }
+    };
+
+    saveScore();
+  }, [username, score]);
+
   return (
     <div className="flex items-center justify-center min-h-screen px-4">
       <div className="flex flex-col items-center text-center p-6 md:p-10 bg-white rounded-2xl shadow-2xl max-w-md w-full animate-fade-in">

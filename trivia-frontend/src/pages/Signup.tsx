@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
+import { TriviaService } from "../services/TriviaService";
 
 const signupSchema = z
   .object({
@@ -28,11 +29,15 @@ const Signup: React.FC = () => {
   });
   const navigate = useNavigate();
 
-  const onSubmit = (data: SignupFormValues) => {
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    users.push({ username: data.username, password: data.password });
-    localStorage.setItem("users", JSON.stringify(users));
-    navigate("/login");
+  const onSubmit = async (data: SignupFormValues) => {
+    try {
+      await TriviaService.signup(data.username, data.password);
+      alert("User registered successfully!");
+      navigate("/login");
+    } catch (error: any) {
+      console.error("Error during signup:", error);
+      alert(error.response?.data || "An error occurred. Please try again.");
+    }
   };
 
   return (

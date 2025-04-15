@@ -15,7 +15,9 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/trivia/signup", "/trivia/scores", "/trivia/scores/**").permitAll()
+                        .requestMatchers("/trivia/signup", "/trivia/login").permitAll()
+                        .requestMatchers("/trivia/scores").permitAll()
+                        .requestMatchers("/trivia/scores/**").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic();
 

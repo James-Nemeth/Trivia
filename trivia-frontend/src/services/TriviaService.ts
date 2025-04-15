@@ -1,4 +1,14 @@
+import axios from "axios";
+
+const API_BASE_URL = "http://localhost:8080/trivia";
 const API_URL = "https://opentdb.com/api.php";
+
+const apiClient = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
 interface Question {
   category: string;
@@ -30,4 +40,37 @@ export const fetchQuestions = async (
     console.error("Failed to fetch questions:", error);
     return [];
   }
+};
+
+export const TriviaService = {
+  signup: async (
+    username: string,
+    password: string,
+    role: string = "PLAYER"
+  ) => {
+    const response = await apiClient.post("/signup", {
+      username,
+      password,
+      role,
+    });
+    return response.data;
+  },
+
+  login: async (username: string, password: string) => {
+    const response = await apiClient.post("/login", {
+      username,
+      password,
+    });
+    return response.data;
+  },
+
+  getScores: async (username: string) => {
+    const response = await apiClient.get(`/scores/${username}`);
+    return response.data;
+  },
+
+  saveScore: async (username: string, score: number) => {
+    const response = await apiClient.post("/scores", { username, score });
+    return response.data;
+  },
 };

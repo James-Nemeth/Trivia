@@ -4,6 +4,7 @@ import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUsername } from "../features/user/userSlice";
+import { TriviaService } from "../services/TriviaService";
 
 const loginSchema = z.object({
   username: z.string().min(1, "Username is required"),
@@ -23,22 +24,18 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const onSubmit = (data: LoginFormValues) => {
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const user = users.find(
-      (user: any) =>
-        user.username === data.username && user.password === data.password
-    );
-
-    if (user) {
+  const onSubmit = async (data: LoginFormValues) => {
+    try {
+      const user = await TriviaService.login(data.username, data.password);
       dispatch(setUsername(user.username));
-      console.log("Login worked");
-      console.log("LOGGED IN");
+      console.log("Login successful");
       navigate("/game");
-    } else {
-      alert("Invalid username or password");
+    } catch (error: any) {
+      console.error("Login failed:", error);
+      alert(error.response?.data || "Invalid username or password");
     }
   };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-purple-600 to-indigo-800 text-white px-4">
       <h1 className="text-5xl md:text-6xl font-extrabold mb-10 text-white text-center">
