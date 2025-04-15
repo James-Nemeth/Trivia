@@ -40,7 +40,13 @@ const DifficultySelector: React.FC<DifficultySelectorProps> = ({
           </button>
         </div>
         <button
-          className="mt-10 bg-purple-500 text-white px-10 py-4 mb-5 text-2xl font-semibold rounded-full shadow-lg hover:bg-purple-800 transition-transform transform hover:scale-105 cursor-pointer"
+          className="mt-10 bg-purple-500 text-white px-10 py-4 mb-2 text-2xl font-semibold rounded-full shadow-lg hover:bg-purple-800 transition-transform transform hover:scale-105 cursor-pointer"
+          onClick={() => navigate("/scores")}
+        >
+          See Scores
+        </button>
+        <button
+          className="mt-2 bg-purple-500 text-white px-10 py-4 mb- text-2xl font-semibold rounded-full shadow-lg hover:bg-purple-800 transition-transform transform hover:scale-105 cursor-pointer"
           onClick={handleBackToMenu}
         >
           {" "}

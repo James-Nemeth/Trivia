@@ -3,6 +3,7 @@ import MainMenu from "./pages/MainMenu";
 import Game from "./pages/Game";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Scores from "./pages/Scores";
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
           <Route path="/game" element={<Game />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/scores" element={<Scores />} />
         </Routes>
       </Router>
     </div>

@@ -10,6 +10,14 @@ const apiClient = axios.create({
   },
 });
 
+const setAuthToken = (token: string | null) => {
+  if (token) {
+    apiClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    delete apiClient.defaults.headers.common["Authorization"];
+  }
+};
+
 interface Question {
   category: string;
   type: string;
@@ -61,7 +69,13 @@ export const TriviaService = {
       username,
       password,
     });
-    return response.data;
+    const { token, username: loggedInUsername } = response.data;
+
+    localStorage.setItem("jwtToken", token);
+
+    setAuthToken(token);
+
+    return { token, username: loggedInUsername };
   },
 
   getScores: async (username: string) => {
@@ -74,3 +88,6 @@ export const TriviaService = {
     return response.data;
   },
 };
+
+const token = localStorage.getItem("jwtToken");
+setAuthToken(token);

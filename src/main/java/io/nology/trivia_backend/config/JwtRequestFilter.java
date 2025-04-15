@@ -22,6 +22,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private static final SecretKey SECRET_KEY = Keys
             .hmacShaKeyFor("JamesAndJackieAreGettingMarriedSoonIn2025".getBytes());
 
+    @SuppressWarnings("null")
     @Override
     protected void doFilterInternal(HttpServletRequest request,
             HttpServletResponse response, FilterChain filterChain)

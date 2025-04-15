@@ -24,9 +24,9 @@ const Game: React.FC = () => {
   );
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto">
       <h1 className="text-2xl text-purple-800 font-bold text-center mb-4">
-        {username ? `Welcome back, ${username}` : "Welcome"}
+        {username ? `Welcome back, ${username}` : "Welcome Guest"}
       </h1>
       {!difficulty && (
         <DifficultySelector

@@ -5,7 +5,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  username: localStorage.getItem("loggedInUser"),
+  username: localStorage.getItem("username"),
 };
 
 const userSlice = createSlice({
@@ -15,9 +15,9 @@ const userSlice = createSlice({
     setUsername(state, action: PayloadAction<string | null>) {
       state.username = action.payload;
       if (action.payload) {
-        localStorage.setItem("loggedInUser", action.payload);
+        localStorage.setItem("username", action.payload);
       } else {
-        localStorage.removeItem("loggedInUser");
+        localStorage.removeItem("username");
       }
     },
   },
