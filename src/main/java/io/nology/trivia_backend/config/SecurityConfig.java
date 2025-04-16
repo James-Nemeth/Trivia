@@ -20,6 +20,9 @@ public class SecurityConfig {
                         .requestMatchers("/trivia/signup", "/trivia/login").permitAll()
                         .requestMatchers("/trivia/scores").permitAll()
                         .requestMatchers("/trivia/scores/**").permitAll()
+                        .requestMatchers("/trivia/games").permitAll()
+                        .requestMatchers("/trivia/questions/failed").permitAll()
+                        .requestMatchers("/trivia/questions/{id}/archive").permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(withDefaults());
 

@@ -4,9 +4,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import io.nology.trivia_backend.dto.CreateUserDTO;
+import io.nology.trivia_backend.dto.SaveGameDTO;
 import io.nology.trivia_backend.dto.SaveScoreDTO;
+import io.nology.trivia_backend.model.TriviaGame;
+import io.nology.trivia_backend.model.TriviaQuestionResult;
 import io.nology.trivia_backend.model.TriviaScore;
 import io.nology.trivia_backend.model.TriviaUser;
+import io.nology.trivia_backend.service.TriviaGameService;
 import io.nology.trivia_backend.service.TriviaScoreService;
 import io.nology.trivia_backend.service.TriviaUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,9 @@ public class TriviaController {
 
     @Autowired
     private TriviaScoreService scoreService;
+
+    @Autowired
+    private TriviaGameService gameService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -95,5 +102,43 @@ public class TriviaController {
         }
         List<TriviaScore> scores = scoreService.getScoresByUser(user);
         return ResponseEntity.ok(scores);
+    }
+
+    @PostMapping("/games")
+    public ResponseEntity<?> saveGame(@RequestBody SaveGameDTO saveGameDTO) {
+        TriviaUser user = userService.findByUsername(saveGameDTO.getUsername());
+        if (user == null) {
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        List<TriviaQuestionResult> questionResults = saveGameDTO.getQuestionResults()
+                .stream()
+                .map(resultDTO -> {
+                    TriviaQuestionResult result = new TriviaQuestionResult();
+                    result.setQuestion(resultDTO.getQuestion());
+                    result.setCorrectAnswer(resultDTO.getCorrectAnswer());
+                    result.setSubmittedAnswer(resultDTO.getSubmittedAnswer());
+                    return result;
+                })
+                .toList();
+
+        TriviaGame game = gameService.saveGame(user, saveGameDTO.getScore(), questionResults);
+        return ResponseEntity.ok(game);
+    }
+
+    @GetMapping("/questions/failed")
+    public ResponseEntity<?> getFailedQuestions() {
+        List<TriviaQuestionResult> failedQuestions = gameService.getFailedQuestions();
+        return ResponseEntity.ok(failedQuestions);
+    }
+
+    @PutMapping("/questions/{id}/archive")
+    public ResponseEntity<?> archiveQuestion(@PathVariable Long id) {
+        try {
+            TriviaQuestionResult archivedQuestion = gameService.archiveQuestion(id);
+            return ResponseEntity.ok(archivedQuestion);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
