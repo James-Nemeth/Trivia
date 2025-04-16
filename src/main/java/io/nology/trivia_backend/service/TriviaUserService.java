@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class TriviaUserService {
     @Autowired
-    private TriviaUserRepository userRepository;
+    public TriviaUserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public PasswordEncoder passwordEncoder;
 
     public TriviaUser registerUser(String username, String password, TriviaRole role) {
         TriviaUser user = new TriviaUser();

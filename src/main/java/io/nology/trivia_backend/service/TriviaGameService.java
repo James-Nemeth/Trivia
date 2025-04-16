@@ -14,10 +14,10 @@ import java.util.List;
 @Service
 public class TriviaGameService {
     @Autowired
-    private TriviaGameRepository gameRepository;
+    public TriviaGameRepository gameRepository;
 
     @Autowired
-    private TriviaQuestionResultRepository questionResultRepository;
+    public TriviaQuestionResultRepository questionResultRepository;
 
     public TriviaGame saveGame(TriviaUser user, int score, List<TriviaQuestionResult> questionResults) {
         TriviaGame game = new TriviaGame();

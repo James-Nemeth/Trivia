@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class TriviaScoreService {
     @Autowired
-    private TriviaScoreRepository scoreRepository;
+    public TriviaScoreRepository scoreRepository;
 
     public TriviaScore saveScore(TriviaUser user, int scoreValue) {
         TriviaScore score = new TriviaScore();
