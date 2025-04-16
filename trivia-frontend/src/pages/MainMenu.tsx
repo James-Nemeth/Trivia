@@ -16,7 +16,7 @@ const MainMenu: React.FC = () => {
       <h1 className="text-3xl font-extrabold mb-1 drop-shadow-lg animate-fade-in">
         Welcome To
       </h1>
-      <h1 className="text-6xl font-extrabold mb-10 drop-shadow-lg animate-fade-in underline">
+      <h1 className="text-4xl md:text-6xl font-extrabold mb-6 md:mb-10 drop-shadow-lg animate-fade-in underline text-center px-4">
         Master Minds
       </h1>
       <button
