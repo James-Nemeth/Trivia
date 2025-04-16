@@ -65,17 +65,29 @@ export const TriviaService = {
   },
 
   login: async (username: string, password: string) => {
-    const response = await apiClient.post("/login", {
-      username,
-      password,
-    });
-    const { token, username: loggedInUsername } = response.data;
+    try {
+      const response = await apiClient.post("/login", {
+        username,
+        password,
+      });
+      const { token, username: loggedInUsername } = response.data;
 
-    localStorage.setItem("jwtToken", token);
+      localStorage.setItem("jwtToken", token);
 
-    setAuthToken(token);
+      setAuthToken(token);
 
-    return { token, username: loggedInUsername };
+      return { token, username: loggedInUsername };
+    } catch (error: any) {
+      if (error.response && error.response.data) {
+        throw new Error(
+          error.response.data.message || "Invalid username or password."
+        );
+      } else {
+        throw new Error(
+          "Unable to connect to the server. Please try again later."
+        );
+      }
+    }
   },
 
   getScores: async (username: string) => {

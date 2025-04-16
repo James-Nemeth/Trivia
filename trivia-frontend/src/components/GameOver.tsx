@@ -13,12 +13,14 @@ interface GameOverProps {
     question: string;
     correctAnswer: string;
   };
+  gameOver: boolean; // New prop to indicate if the game is actually over
 }
 
 const GameOver: React.FC<GameOverProps> = ({
   score,
   onPlayAgain,
   lastQuestion,
+  gameOver,
 }) => {
   const dispatch = useDispatch();
   const username = useSelector((state: RootState) => state.user.username);
@@ -26,14 +28,13 @@ const GameOver: React.FC<GameOverProps> = ({
 
   useEffect(() => {
     const saveScore = async () => {
-      // Ensure score is saved only once and only when the component is first rendered after game over
-      if (username && !scoreSaved) {
+      if (gameOver && username && !scoreSaved) {
         try {
           await TriviaService.saveScore(username, score);
           dispatch(
             showToast({ message: "Score saved successfully!", type: "success" })
           );
-          setScoreSaved(true); // Mark score as saved
+          setScoreSaved(true);
         } catch (error) {
           dispatch(
             showToast({
@@ -46,7 +47,7 @@ const GameOver: React.FC<GameOverProps> = ({
     };
 
     saveScore();
-  }, [username, score, dispatch, scoreSaved]);
+  }, [gameOver, username, score, dispatch, scoreSaved]);
 
   return (
     <div className="flex items-center justify-center min-h-screen px-4">

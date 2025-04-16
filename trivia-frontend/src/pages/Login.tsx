@@ -39,7 +39,8 @@ const Login: React.FC = () => {
     } catch (error: any) {
       dispatch(
         showToast({
-          message: error.response?.data || "Invalid username or password",
+          message:
+            error.message || "Invalid username or password. Please try again.",
           type: "error",
         })
       );
