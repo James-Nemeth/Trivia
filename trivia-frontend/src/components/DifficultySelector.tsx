@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
+import { Difficulty } from "../types/types";
 
 interface DifficultySelectorProps {
-  onSelectDifficulty: (difficulty: string) => void;
+  onSelectDifficulty: (difficulty: Difficulty) => void;
 }
 
 const DifficultySelector: React.FC<DifficultySelectorProps> = ({

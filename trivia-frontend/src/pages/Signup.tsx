@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { showToast } from "../features/toast/toastSlice";
 import { TriviaService } from "../services/TriviaService";
 
 const signupSchema = z
@@ -28,15 +30,28 @@ const Signup: React.FC = () => {
     resolver: zodResolver(signupSchema),
   });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onSubmit = async (data: SignupFormValues) => {
     try {
       await TriviaService.signup(data.username, data.password);
-      alert("User registered successfully!");
+      dispatch(
+        showToast({
+          message: "User registered successfully!",
+          type: "success",
+        })
+      );
       navigate("/login");
     } catch (error: any) {
+      const errorMessage =
+        error.response?.data || "An error occurred. Please try again.";
       console.error("Error during signup:", error);
-      alert(error.response?.data || "An error occurred. Please try again.");
+      dispatch(
+        showToast({
+          message: errorMessage,
+          type: "error",
+        })
+      );
     }
   };
 

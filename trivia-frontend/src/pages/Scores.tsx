@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { showToast } from "../features/toast/toastSlice";
 import { TriviaService } from "../services/TriviaService";
 import { paginate } from "../utils/utilities";
 
@@ -16,37 +18,75 @@ const Scores: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchScores = async () => {
       try {
         const username = localStorage.getItem("username");
         if (!username) {
-          setError("No username found.");
+          const errorMessage = "No username found.";
+          setError(errorMessage);
+          dispatch(
+            showToast({
+              message: errorMessage,
+              type: "error",
+            })
+          );
           return;
         }
+
         const data = await TriviaService.getScores(username);
         setScores(data);
+        dispatch(
+          showToast({
+            message: "Scores loaded successfully!",
+            type: "success",
+          })
+        );
       } catch (err) {
-        console.error("Failed to fetch scores:", err);
-        setError("Failed to fetch scores.");
+        const errorMessage = "Failed to fetch scores.";
+        console.error(errorMessage, err);
+        setError(errorMessage);
+        dispatch(
+          showToast({
+            message: errorMessage,
+            type: "error",
+          })
+        );
       } finally {
         setLoading(false);
       }
     };
 
     fetchScores();
-  }, []);
+  }, [dispatch]);
 
   const totalPages = Math.ceil(scores.length / itemsPerPage);
   const currentScores = paginate(scores, currentPage, itemsPerPage);
 
   const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
+    if (currentPage < totalPages) {
+      setCurrentPage((prev) => prev + 1);
+      dispatch(
+        showToast({
+          message: "Moved to the next page.",
+          type: "success",
+        })
+      );
+    }
   };
 
   const handlePrev = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+      dispatch(
+        showToast({
+          message: "Moved to the previous page.",
+          type: "success",
+        })
+      );
+    }
   };
 
   if (loading) return <p>Loading...</p>;
@@ -128,7 +168,15 @@ const Scores: React.FC = () => {
         <div className="flex justify-center mt-10">
           <button
             className="bg-purple-500 text-white px-10 py-4 text-2xl font-semibold rounded-full shadow-lg hover:bg-purple-800 transition-transform transform hover:scale-105 cursor-pointer"
-            onClick={() => navigate("/game")}
+            onClick={() => {
+              navigate("/game");
+              dispatch(
+                showToast({
+                  message: "Returning to the game.",
+                  type: "success",
+                })
+              );
+            }}
           >
             Back to Game
           </button>

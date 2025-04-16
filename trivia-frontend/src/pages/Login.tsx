@@ -4,6 +4,7 @@ import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUsername } from "../features/user/userSlice";
+import { showToast } from "../features/toast/toastSlice";
 import { TriviaService } from "../services/TriviaService";
 
 const loginSchema = z.object({
@@ -28,11 +29,20 @@ const Login: React.FC = () => {
     try {
       const user = await TriviaService.login(data.username, data.password);
       dispatch(setUsername(user.username));
-      console.log("Login successful");
+      dispatch(
+        showToast({
+          message: "Login successful!",
+          type: "success",
+        })
+      );
       navigate("/game");
     } catch (error: any) {
-      console.error("Login failed:", error);
-      alert(error.response?.data || "Invalid username or password");
+      dispatch(
+        showToast({
+          message: error.response?.data || "Invalid username or password",
+          type: "error",
+        })
+      );
     }
   };
 

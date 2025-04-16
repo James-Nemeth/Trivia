@@ -12,6 +12,7 @@ import {
   setLastQuestion,
   setTimer,
 } from "../features/game/gameSlice";
+import { showToast } from "../features/toast/toastSlice";
 import { shuffleAnswers } from "../utils/utilities";
 import { Difficulty } from "../types/types";
 
@@ -33,8 +34,19 @@ const useGameLogic = () => {
       const fetchTriviaQuestions = async () => {
         const questions = await fetchQuestions(difficulty as string);
         if (questions.length === 0) {
-          console.error("No questions found for the selected difficulty");
+          dispatch(
+            showToast({
+              message: "No questions found for the selected difficulty.",
+              type: "error",
+            })
+          );
         } else {
+          dispatch(
+            showToast({
+              message: "Questions loaded successfully!",
+              type: "success",
+            })
+          );
           dispatch(setQuestions(questions));
         }
       };
@@ -57,6 +69,12 @@ const useGameLogic = () => {
           dispatch(setTimer(timer - 1));
         } else {
           dispatch(setGameOver(true));
+          dispatch(
+            showToast({
+              message: "Time's up! Game over.",
+              type: "error",
+            })
+          );
           clearInterval(timerInterval);
         }
       }, 1000);
@@ -72,12 +90,24 @@ const useGameLogic = () => {
     if (isCorrect) {
       dispatch(setScore(score + 1));
       dispatch(setTimer(20));
+      dispatch(
+        showToast({
+          message: "Correct answer! Great job!",
+          type: "success",
+        })
+      );
 
       const nextQuestionIndex = currentQuestionIndex + 1;
       if (nextQuestionIndex < questions.length) {
         dispatch(setCurrentQuestionIndex(nextQuestionIndex));
       } else {
         dispatch(setGameOver(true));
+        dispatch(
+          showToast({
+            message: "Congratulations! You completed the game!",
+            type: "success",
+          })
+        );
       }
     } else {
       dispatch(
@@ -87,15 +117,33 @@ const useGameLogic = () => {
         })
       );
       dispatch(setGameOver(true));
+      dispatch(
+        showToast({
+          message: "Wrong answer! Game over.",
+          type: "error",
+        })
+      );
     }
   };
 
   const handleTimeout = () => {
     dispatch(setGameOver(true));
+    dispatch(
+      showToast({
+        message: "Time's up! Game over.",
+        type: "error",
+      })
+    );
   };
 
   const handlePlayAgain = () => {
     dispatch(resetGame());
+    dispatch(
+      showToast({
+        message: "Game reset! Good luck.",
+        type: "success",
+      })
+    );
   };
 
   return {

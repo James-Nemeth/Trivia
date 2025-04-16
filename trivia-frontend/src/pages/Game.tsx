@@ -27,7 +27,7 @@ const Game: React.FC = () => {
   return (
     <div className="container mx-auto h-screen flex flex-col overflow-hidden">
       <h1 className="text-3xl text-white font-bold text-center my-4 shrink-0">
-        {username ? `Welcome back, ${username}` : "Welcome Guest"}
+        {username ? `Welcome, ${username}` : "Welcome Guest"}
       </h1>
 
       <div className="flex-1 overflow-hidden">
