@@ -26,13 +26,14 @@ const GameOver: React.FC<GameOverProps> = ({
 
   useEffect(() => {
     const saveScore = async () => {
+      // Ensure score is saved only once and only when the component is first rendered after game over
       if (username && !scoreSaved) {
         try {
           await TriviaService.saveScore(username, score);
           dispatch(
             showToast({ message: "Score saved successfully!", type: "success" })
           );
-          setScoreSaved(true);
+          setScoreSaved(true); // Mark score as saved
         } catch (error) {
           dispatch(
             showToast({

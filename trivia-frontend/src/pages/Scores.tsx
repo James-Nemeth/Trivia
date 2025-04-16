@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { showToast } from "../features/toast/toastSlice";
 import { TriviaService } from "../services/TriviaService";
-import { paginate } from "../utils/utilities";
+import { paginate, handleNext, handlePrev } from "../utils/utilities";
 
 interface Score {
   id: number;
@@ -16,6 +16,7 @@ const Scores: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [usernameExists, setUsernameExists] = useState(true);
   const itemsPerPage = 5;
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -25,14 +26,7 @@ const Scores: React.FC = () => {
       try {
         const username = localStorage.getItem("username");
         if (!username) {
-          const errorMessage = "No username found.";
-          setError(errorMessage);
-          dispatch(
-            showToast({
-              message: errorMessage,
-              type: "error",
-            })
-          );
+          setUsernameExists(false);
           return;
         }
 
@@ -65,29 +59,39 @@ const Scores: React.FC = () => {
   const totalPages = Math.ceil(scores.length / itemsPerPage);
   const currentScores = paginate(scores, currentPage, itemsPerPage);
 
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
-      dispatch(
-        showToast({
-          message: "Moved to the next page.",
-          type: "success",
-        })
-      );
-    }
+  const onNextSuccess = () => {
+    dispatch(
+      showToast({
+        message: "Moved to the next page.",
+        type: "success",
+      })
+    );
   };
 
-  const handlePrev = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prev) => prev - 1);
-      dispatch(
-        showToast({
-          message: "Moved to the previous page.",
-          type: "success",
-        })
-      );
-    }
+  const onPrevSuccess = () => {
+    dispatch(
+      showToast({
+        message: "Moved to the previous page.",
+        type: "success",
+      })
+    );
   };
+
+  if (!usernameExists) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-600 to-indigo-800 px-4">
+        <h1 className="text-3xl md:text-5xl font-extrabold text-white text-center mb-8">
+          You must be logged in to see your scores.
+        </h1>
+        <button
+          className="bg-purple-500 text-white px-10 py-4 text-2xl font-semibold rounded-full shadow-lg hover:bg-purple-800 transition-transform transform hover:scale-105 cursor-pointer"
+          onClick={() => navigate("/game")}
+        >
+          Back to Game
+        </button>
+      </div>
+    );
+  }
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
@@ -112,7 +116,7 @@ const Scores: React.FC = () => {
                     <p className="text-xl font-bold text-purple-700">
                       Score: {score.score}
                     </p>
-                    <p className="text-md font bold text-black">
+                    <p className="text-md font-bold text-black">
                       Date: {new Date(score.timestamp).toLocaleString()}
                     </p>
                   </div>
@@ -137,7 +141,9 @@ const Scores: React.FC = () => {
 
             <div className="flex justify-center gap-4 mt-8">
               <button
-                onClick={handlePrev}
+                onClick={() =>
+                  handlePrev(currentPage, setCurrentPage, onPrevSuccess)
+                }
                 disabled={currentPage === 1}
                 className={`px-4 py-2 text-lg font-semibold rounded-lg ${
                   currentPage === 1
@@ -151,7 +157,14 @@ const Scores: React.FC = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                onClick={handleNext}
+                onClick={() =>
+                  handleNext(
+                    currentPage,
+                    totalPages,
+                    setCurrentPage,
+                    onNextSuccess
+                  )
+                }
                 disabled={currentPage === totalPages}
                 className={`px-4 py-2 text-lg font-semibold rounded-lg ${
                   currentPage === totalPages

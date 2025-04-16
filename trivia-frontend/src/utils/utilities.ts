@@ -16,3 +16,26 @@ export const paginate = <T>(
   const startIndex = (currentPage - 1) * itemsPerPage;
   return items.slice(startIndex, startIndex + itemsPerPage);
 };
+
+export const handleNext = (
+  currentPage: number,
+  totalPages: number,
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>,
+  onSuccess?: () => void
+): void => {
+  if (currentPage < totalPages) {
+    setCurrentPage((prev) => prev + 1);
+    if (onSuccess) onSuccess();
+  }
+};
+
+export const handlePrev = (
+  currentPage: number,
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>,
+  onSuccess?: () => void
+): void => {
+  if (currentPage > 1) {
+    setCurrentPage((prev) => prev - 1);
+    if (onSuccess) onSuccess();
+  }
+};
