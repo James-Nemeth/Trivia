@@ -1,8 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface UserState {
-  username: string | null;
-}
+import { UserState } from "../../types/types";
 
 const initialState: UserState = {
   username: localStorage.getItem("username"),

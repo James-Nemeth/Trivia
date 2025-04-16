@@ -13,6 +13,7 @@ import {
   setTimer,
 } from "../features/game/gameSlice";
 import { shuffleAnswers } from "../utils/utilities";
+import { Difficulty } from "../types/types";
 
 const useGameLogic = () => {
   const dispatch = useDispatch();
@@ -27,11 +28,10 @@ const useGameLogic = () => {
   const username = useSelector((state: RootState) => state.user.username);
   const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
 
-  // Fetch questions when difficulty is set
   useEffect(() => {
     if (difficulty) {
       const fetchTriviaQuestions = async () => {
-        const questions = await fetchQuestions(difficulty);
+        const questions = await fetchQuestions(difficulty as string);
         if (questions.length === 0) {
           console.error("No questions found for the selected difficulty");
         } else {
@@ -42,7 +42,6 @@ const useGameLogic = () => {
     }
   }, [difficulty, dispatch]);
 
-  // Shuffle answers whenever the current question changes
   useEffect(() => {
     if (questions.length > 0) {
       const currentQ = questions[currentQuestionIndex];
@@ -51,14 +50,13 @@ const useGameLogic = () => {
     }
   }, [questions, currentQuestionIndex]);
 
-  // Timer logic
   useEffect(() => {
     if (!gameOver) {
       const timerInterval = setInterval(() => {
         if (timer > 0) {
           dispatch(setTimer(timer - 1));
         } else {
-          dispatch(setGameOver(true)); // End game if timer reaches 0
+          dispatch(setGameOver(true));
           clearInterval(timerInterval);
         }
       }, 1000);
@@ -73,7 +71,7 @@ const useGameLogic = () => {
 
     if (isCorrect) {
       dispatch(setScore(score + 1));
-      dispatch(setTimer(20)); // Reset timer to 20 seconds
+      dispatch(setTimer(20));
 
       const nextQuestionIndex = currentQuestionIndex + 1;
       if (nextQuestionIndex < questions.length) {
@@ -112,7 +110,8 @@ const useGameLogic = () => {
     handleAnswer,
     handleTimeout,
     handlePlayAgain,
-    setDifficulty: (difficulty: string) => dispatch(setDifficulty(difficulty)),
+    setDifficulty: (difficulty: Difficulty) =>
+      dispatch(setDifficulty(difficulty)),
   };
 };
 

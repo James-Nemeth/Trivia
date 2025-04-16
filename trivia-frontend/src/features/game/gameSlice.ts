@@ -1,17 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-
-interface GameState {
-  difficulty: string | null;
-  questions: any[];
-  currentQuestionIndex: number;
-  score: number;
-  gameOver: boolean;
-  lastQuestion?: {
-    question: string;
-    correctAnswer: string;
-  };
-  timer: number; // Add a timer property
-}
+import { GameState, LastQuestion } from "../../types/types";
 
 const initialState: GameState = {
   difficulty: null,
@@ -20,7 +8,7 @@ const initialState: GameState = {
   score: 0,
   gameOver: false,
   lastQuestion: undefined,
-  timer: 20, // Initialize timer to 20 seconds
+  timer: 20,
 };
 
 const gameSlice = createSlice({
@@ -42,10 +30,7 @@ const gameSlice = createSlice({
     setGameOver(state, action: PayloadAction<boolean>) {
       state.gameOver = action.payload;
     },
-    setLastQuestion(
-      state,
-      action: PayloadAction<{ question: string; correctAnswer: string }>
-    ) {
+    setLastQuestion(state, action: PayloadAction<LastQuestion>) {
       state.lastQuestion = action.payload;
     },
     resetGame(state) {
@@ -54,7 +39,7 @@ const gameSlice = createSlice({
       state.currentQuestionIndex = 0;
       state.score = 0;
       state.gameOver = false;
-      state.timer = 20; // Reset timer
+      state.timer = 20;
     },
     setTimer(state, action: PayloadAction<number>) {
       state.timer = action.payload;
